@@ -1,0 +1,574 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── Root ── */
+.vt-root {
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    background: #f5f4f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.vt-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.vt-inner {
+    width: 100%;
+    max-width: 560px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ── Header ── */
+.vt-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.vt-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    font-weight: 500;
+}
+
+.vt-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #1D9E75;
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+
+.vt-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 0.03em;
+    color: #1a1a1a;
+    line-height: 1;
+    font-weight: 400;
+}
+
+.vt-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.vt-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    background: #fff;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    border-radius: 99px;
+    padding: 3px 10px;
+    color: #777;
+}
+
+/* ── Section label ── */
+.vt-section-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #bbb;
+    margin-bottom: 8px;
+}
+
+/* ── Candidates ── */
+.vt-candidates {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vt-cand {
+    background: #fff;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    outline: none;
+}
+
+.vt-cand:hover {
+    border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vt-cand.selected {
+    border-color: #1D9E75;
+    background: #E1F5EE;
+}
+
+.vt-cand:focus-visible {
+    box-shadow: 0 0 0 3px #9FE1CB;
+}
+
+.vt-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.vt-cand-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.vt-cand-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.vt-cand-meta {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.vt-party-pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    border-radius: 99px;
+    padding: 2px 10px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+/* ── Radio ── */
+.vt-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0, 0, 0, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    background: #fff;
+}
+
+.vt-cand.selected .vt-radio {
+    background: #1D9E75;
+    border-color: #1D9E75;
+}
+
+.vt-radio-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.vt-cand.selected .vt-radio-dot {
+    opacity: 1;
+}
+
+/* ── Confirm box ── */
+.vt-confirm-box {
+    background: #fff;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vt-confirm-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.vt-confirm-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #bbb;
+    font-weight: 500;
+}
+
+.vt-confirm-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-top: 2px;
+}
+
+.vt-btn-clear {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    color: #bbb;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.vt-btn-clear:hover {
+    color: #888;
+}
+
+/* ── Vote button ── */
+.vt-btn-vote {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    background: #1D9E75;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.vt-btn-vote:disabled {
+    background: rgba(0, 0, 0, 0.08);
+    color: #bbb;
+    cursor: not-allowed;
+}
+
+.vt-btn-vote:not(:disabled):hover {
+    background: #0F6E56;
+}
+
+.vt-btn-vote:not(:disabled):active {
+    transform: scale(0.99);
+}
+
+/* ── Disclaimer ── */
+.vt-disclaimer {
+    font-size: 11px;
+    color: #bbb;
+    text-align: center;
+    line-height: 1.6;
+}
+
+/* ── Success screen ── */
+.vt-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.vt-success-ring {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #E1F5EE;
+    border: 2px solid #1D9E75;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: #1D9E75;
+}
+
+.vt-success-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: #1a1a1a;
+    letter-spacing: 0.03em;
+    font-weight: 400;
+}
+
+.vt-success-sub {
+    font-size: 14px;
+    color: #888;
+    font-weight: 300;
+    max-width: 300px;
+    line-height: 1.7;
+}
+
+/* ── Receipt ── */
+.vt-receipt {
+    background: #f5f4f0;
+    border-radius: 12px;
+    padding: 14px 18px;
+    width: 100%;
+    max-width: 360px;
+}
+
+.vt-receipt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+
+.vt-receipt-row:last-child {
+    border-bottom: none;
+    font-weight: 500;
+    padding-top: 9px;
+}
+
+.vt-receipt-key {
+    color: #999;
+}
+
+.vt-receipt-val {
+    color: #1a1a1a;
+}
+
+/* ── Results ── */
+.vt-results {
+    background: #fff;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    padding: 16px;
+    width: 100%;
+    max-width: 360px;
+}
+
+.vt-results-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #bbb;
+    font-weight: 500;
+    margin-bottom: 14px;
+}
+
+.vt-bar-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.vt-bar-row:last-child {
+    margin-bottom: 0;
+}
+
+.vt-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.vt-bar-name {
+    color: #888;
+}
+
+.vt-bar-pct {
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.vt-bar-track {
+    height: 6px;
+    background: #f0ede8;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.vt-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Back button ── */
+.vt-btn-back {
+    padding: 11px 28px;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: #777;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+}
+
+.vt-btn-back:hover {
+    background: #f5f4f0;
+}
+
+/* ── Animation ── */
+.fade-in {
+    animation: fadeUp 0.3s ease both;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* ── Dark mode ── */
+@media (prefers-color-scheme: dark) {
+    .vt-root {
+        background: #111110;
+    }
+
+    .vt-bg-grid {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    }
+
+    .vt-title {
+        color: #f0ede6;
+    }
+
+    .vt-chip {
+        background: #1c1c1a;
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #888;
+    }
+
+    .vt-cand {
+        background: #1c1c1a;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .vt-cand:hover {
+        border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .vt-cand.selected {
+        background: #0a2e22;
+        border-color: #1D9E75;
+    }
+
+    .vt-cand-name {
+        color: #f0ede6;
+    }
+
+    .vt-radio {
+        background: #2a2a28;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .vt-confirm-box {
+        background: #1c1c1a;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .vt-confirm-name {
+        color: #f0ede6;
+    }
+
+    .vt-btn-vote:disabled {
+        background: rgba(255, 255, 255, 0.07);
+        color: #555;
+    }
+
+    .vt-receipt {
+        background: #1c1c1a;
+    }
+
+    .vt-receipt-row {
+        border-bottom-color: rgba(255, 255, 255, 0.07);
+    }
+
+    .vt-receipt-val {
+        color: #f0ede6;
+    }
+
+    .vt-results {
+        background: #1c1c1a;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .vt-bar-track {
+        background: #2a2a28;
+    }
+
+    .vt-success-title {
+        color: #f0ede6;
+    }
+
+    .vt-btn-back {
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #888;
+    }
+
+    .vt-btn-back:hover {
+        background: #1c1c1a;
+    }
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .vt-title {
+        font-size: 2rem;
+    }
+}

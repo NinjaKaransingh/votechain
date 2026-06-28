@@ -1,0 +1,45 @@
+const mongoose = require("mongoose");
+
+const PollSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    region: {
+      type: String,
+      required: true,
+    },
+    candidates: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Candidate",
+      },
+    ],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
+      type: Date,
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { timestamps: true },
+);
+
+module.exports = mongoose.model("Poll", PollSchema);

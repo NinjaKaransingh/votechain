@@ -1,0 +1,564 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── Root ── */
+.rg-root {
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  background: #f5f4f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.rg-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Stepper ── */
+.rg-stepper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 1.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.rg-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.rg-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  color: #999;
+  background: #fff;
+  transition: all 0.25s;
+}
+
+.rg-circle.active {
+  background: #1D9E75;
+  border-color: #1D9E75;
+  color: #fff;
+}
+
+.rg-circle.done {
+  background: #E1F5EE;
+  border-color: #1D9E75;
+  color: #085041;
+}
+
+.rg-step-label {
+  font-size: 10px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+
+.rg-step-label.active {
+  color: #0F6E56;
+  font-weight: 500;
+}
+
+.rg-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  transition: background 0.3s;
+}
+
+.rg-line.done {
+  background: #1D9E75;
+}
+
+/* ── Card ── */
+.rg-card {
+  background: #ffffff;
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.35s ease both;
+}
+
+.rg-card-head {
+  margin-bottom: 1.5rem;
+}
+
+.rg-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.03em;
+  color: #1a1a1a;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.rg-sub {
+  font-size: 13px;
+  color: #888;
+  margin-top: 4px;
+  font-weight: 300;
+}
+
+/* ── Fields ── */
+.rg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 1rem;
+}
+
+.rg-field label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.rg-field input,
+.rg-field select,
+.rg-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 0.5px solid rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  background: #fff;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+}
+
+.rg-field input:focus,
+.rg-field select:focus,
+.rg-field textarea:focus {
+  border-color: #1D9E75;
+  box-shadow: 0 0 0 3px #E1F5EE;
+}
+
+.rg-field textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.6;
+}
+
+.rg-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rg-char-count {
+  font-size: 11px;
+  color: #bbb;
+  text-align: right;
+}
+
+/* ── Party Grid ── */
+.rg-party-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.rg-party-btn {
+  padding: 10px 6px;
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #fff;
+  color: #666;
+  text-align: center;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.rg-party-icon {
+  font-size: 18px;
+}
+
+.rg-party-btn:hover {
+  background: #f5f4f0;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.rg-party-btn.selected {
+  background: #E1F5EE;
+  border-color: #1D9E75;
+  color: #085041;
+}
+
+/* ── Photo Zone ── */
+.rg-photo-zone {
+  border: 1.5px dashed rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 2.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: #fafafa;
+  text-align: center;
+}
+
+.rg-photo-zone:hover {
+  border-color: #1D9E75;
+  background: #E1F5EE;
+}
+
+.rg-photo-zone.has-photo {
+  border-color: #1D9E75;
+  padding: 1.5rem;
+}
+
+.rg-photo-camera {
+  font-size: 2rem;
+}
+
+.rg-photo-preview {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1D9E75;
+}
+
+.rg-photo-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 400;
+}
+
+.rg-photo-hint {
+  font-size: 11px;
+  color: #bbb;
+}
+
+/* ── Profile Preview ── */
+.rg-preview-card {
+  margin-top: 1rem;
+}
+
+.rg-preview-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #bbb;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.rg-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f5f4f0;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.rg-profile-row--full {
+  width: 100%;
+}
+
+.rg-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #9FE1CB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 15px;
+  color: #085041;
+  flex-shrink: 0;
+}
+
+.rg-profile-name {
+  font-weight: 500;
+  font-size: 15px;
+  color: #1a1a1a;
+}
+
+.rg-profile-party {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* ── Actions ── */
+.rg-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+.rg-btn-back {
+  flex: 1;
+  padding: 11px;
+  border: 0.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  color: #777;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+
+.rg-btn-back:hover {
+  background: #f5f4f0;
+}
+
+.rg-btn-next {
+  flex: 2;
+  padding: 11px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #1D9E75;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.rg-btn-next:not(:disabled):hover {
+  background: #0F6E56;
+}
+
+.rg-btn-next:not(:disabled):hover .rg-arrow {
+  transform: translateX(3px);
+}
+
+.rg-btn-next:active {
+  transform: scale(0.98);
+}
+
+.rg-btn-full {
+  flex: 1;
+  width: 100%;
+}
+
+.rg-arrow {
+  display: inline-block;
+  transition: transform 0.15s;
+}
+
+/* ── Success ── */
+.rg-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  text-align: center;
+}
+
+.rg-success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #E1F5EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #1D9E75;
+}
+
+.rg-success-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  color: #1a1a1a;
+  letter-spacing: 0.03em;
+  font-weight: 400;
+}
+
+.rg-success-sub {
+  font-size: 14px;
+  color: #888;
+  font-weight: 300;
+  max-width: 300px;
+  line-height: 1.65;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Dark Mode ── */
+@media (prefers-color-scheme: dark) {
+  .rg-root {
+    background: #111110;
+  }
+
+  .rg-bg-grid {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  .rg-card {
+    background: #1c1c1a;
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .rg-title {
+    color: #f0ede6;
+  }
+
+  .rg-circle {
+    background: #2a2a28;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #777;
+  }
+
+  .rg-line {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .rg-field input,
+  .rg-field select,
+  .rg-field textarea {
+    background: #2a2a28;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #f0ede6;
+  }
+
+  .rg-party-btn {
+    background: #2a2a28;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #999;
+  }
+
+  .rg-party-btn:hover {
+    background: #333330;
+  }
+
+  .rg-photo-zone {
+    background: #1c1c1a;
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .rg-photo-zone:hover {
+    background: #0a2e22;
+  }
+
+  .rg-profile-row {
+    background: #2a2a28;
+  }
+
+  .rg-profile-name {
+    color: #f0ede6;
+  }
+
+  .rg-btn-back {
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #888;
+  }
+
+  .rg-btn-back:hover {
+    background: #2a2a28;
+  }
+
+  .rg-success-title {
+    color: #f0ede6;
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .rg-row {
+    grid-template-columns: 1fr;
+  }
+
+  .rg-party-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rg-btn-next:disabled,
+.rg-btn-back:disabled {
+  background: #cfcfcf;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.rg-btn-next:disabled:hover,
+.rg-btn-back:disabled:hover {
+  background: #cfcfcf;
+  transform: none;
+}
+
+.rg-btn-next:disabled .rg-arrow {
+  transform: none;
+}
+
+.rg-btn-next:not(:disabled):hover {
+  background: #0F6E56;
+}
+
+.rg-btn-next:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.rg-btn-next:not(:disabled):hover .rg-arrow {
+  transform: translateX(3px);
+}
