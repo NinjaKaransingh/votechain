@@ -133,7 +133,7 @@ VOTES
 ```
 Frontend          Backend           Database          Auth
 ─────────         ───────           ────────          ────
-React 18          Node.js           MongoDB           JWT
+React 19          Node.js           MongoDB           JWT
 Vite              Express.js        Mongoose          bcryptjs
 React Router v6   REST API          Compound Index    dotenv
 CSS3              CORS              4 Collections
