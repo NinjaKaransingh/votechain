@@ -86,7 +86,11 @@ const loginUser = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET,
+<<<<<<< Updated upstream
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" },
+=======
+      { expiresIn: process.env.JWT_EXPIRES_IN },
+>>>>>>> Stashed changes
     );
 
     // 4. Send response
