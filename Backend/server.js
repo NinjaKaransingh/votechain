@@ -3,6 +3,8 @@ const cors = require("cors"); //to allow frontend to interact with backend
 const dotenv = require("dotenv"); //to load all the env
 const connectDB = require("./config/db.js");
 
+const authRoutes = require("./routes/authRoutes.js");
+
 dotenv.config();
 
 const app = express();
@@ -16,7 +18,7 @@ connectDB()
   .then(() => console.log("connected to DB"))
   .catch((err) => console.log(err));
 
-// connectDB();
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.json({
