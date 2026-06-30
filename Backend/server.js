@@ -4,6 +4,7 @@ const dotenv = require("dotenv"); //to load all the env
 const connectDB = require("./config/db.js");
 
 const authRoutes = require("./routes/authRoutes.js");
+const candidateRoutes = require("./routes/candidateRoutes.js");
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ connectDB()
   .catch((err) => console.log(err));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/candidates", candidateRoutes);
 
 app.get("/", (req, res) => {
   res.json({

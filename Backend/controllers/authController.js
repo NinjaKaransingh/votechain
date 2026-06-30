@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
     });
 
     // 4. Generate JWT token
-    const token = jwt.sign(
+    const token = jwt.sign(                                                 
       {
         id: user._id,
         role: user.role,
