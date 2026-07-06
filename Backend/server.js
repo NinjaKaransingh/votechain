@@ -5,6 +5,8 @@ const connectDB = require("./config/db.js");
 
 const authRoutes = require("./routes/authRoutes.js");
 const candidateRoutes = require("./routes/candidateRoutes.js");
+const pollRoutes = require("./routes/pollRoutes.js");
+const voteRoutes = require("./routes/voteRoutes.js");
 
 dotenv.config();
 
@@ -21,6 +23,8 @@ connectDB()
 
 app.use("/api/auth", authRoutes);
 app.use("/api/candidates", candidateRoutes);
+app.use("/api/polls", pollRoutes);
+app.use("/api/votes", voteRoutes);
 
 app.get("/", (req, res) => {
   res.json({
