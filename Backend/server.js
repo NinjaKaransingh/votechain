@@ -12,8 +12,17 @@ dotenv.config();
 
 const app = express();
 
+// Only allow your actual frontend origin(s) in production — comma-separated in .env
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map((s) => s.trim())
+  : ["http://localhost:5173"];
 //middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 //connect to DB

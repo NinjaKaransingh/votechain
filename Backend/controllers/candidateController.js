@@ -73,7 +73,6 @@ const registerCandidate = async (req, res) => {
 // ── GET ALL CANDIDATES ──
 
 const getAllCandidates = async (req, res) => {
-  console.log("reaching to get all");
   try {
     const candidates = await Candidate.find().populate(
       "userId",

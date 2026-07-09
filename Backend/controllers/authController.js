@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
     });
 
     // 4. Generate JWT token
-    const token = jwt.sign(                                                 
+    const token = jwt.sign(
       {
         id: user._id,
         role: user.role,
@@ -107,4 +107,9 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+// ── GET CURRENT USER (used by frontend on page load to check if the token is still valid) ──
+const getMe = async (req, res) => {
+  res.status(200).json({ user: req.user });
+};
+
+module.exports = { registerUser, loginUser, getMe };

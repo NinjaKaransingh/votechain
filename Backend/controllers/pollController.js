@@ -4,8 +4,7 @@ const Candidate = require("../models/Candidate");
 // ── CREATE POLL ──
 const createPoll = async (req, res) => {
   try {
-    const { title, description, region, startDate, endDate, createdBy } =
-      req.body;
+    const { title, description, region, startDate, endDate } = req.body;
 
     //1. Create the poll
     const poll = await Poll.create({
@@ -14,7 +13,7 @@ const createPoll = async (req, res) => {
       region,
       startDate,
       endDate,
-      createdBy, // userId of admin who created it
+      createdBy: req.user._id, // userId of admin who created it
       candidates: [], // empty at first, candidates added later
       isActive: true,
     });
