@@ -14,7 +14,6 @@ api.interceptors.request.use((config) => {
 });
 
 // If the token is invalid/expired, clear it so the app falls back to logged-out state
-
 api.interceptors.response.use(
   (res) => res,
   (err) => {
