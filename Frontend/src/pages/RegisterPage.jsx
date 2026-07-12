@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { candidateAPI } from "../api/services";
+import { useAuth } from "../context/useAuth";
 import "../styles/RegisterPage.css";
 
 const PARTIES = [
@@ -32,6 +34,10 @@ const STEPS = ["Personal", "Campaign", "Photo"];
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [submitError, setSubmitError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [step, setStep] = useState(1);
 
   const [form, setForm] = useState({
@@ -84,6 +90,33 @@ const RegisterPage = () => {
   const handleSubmit = async () => {
     // TODO: wire to POST /api/candidates/RegisterPage
     console.log("Submitting:", form);
+    setSubmitError("");
+    setSubmitting(true);
+    try {
+      const { data } = await candidateAPI.register({
+        name: `${form.firstName} ${form.lastName}`.trim(),
+        email: form.email,
+        password: form.password,
+        state: form.state,
+        party: form.party,
+        position: form.position,
+        bio: form.bio,
+        photo: form.photoPreview || "", // base64 data URL — fine for an MVP, swap for Cloudinary/S3 before real production use
+      });
+
+      login(data?.token, {
+        id: data.candidate.id,
+        name: data.candidate.name,
+        email: data.candidate.email,
+        role: "candidate",
+      });
+    } catch (err) {
+      setSubmitError(
+        err.response?.data?.message || "Registration failed. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
     setStep(4);
   };
 
@@ -313,6 +346,12 @@ const RegisterPage = () => {
               </div>
             </div>
 
+            {submitError && (
+              <p style={{ color: "#B3261E", fontSize: "0.85rem" }}>
+                {submitError}
+              </p>
+            )}
+
             <div className="rg-actions">
               <button className="rg-btn-back" onClick={() => setStep(2)}>
                 ← Back
@@ -320,9 +359,9 @@ const RegisterPage = () => {
               <button
                 className="rg-btn-next"
                 onClick={handleSubmit}
-                disabled={!isSubmitEnabled}
+                disabled={!isSubmitEnabled || submitting}
               >
-                Submit ✓
+                {submitting ? "Submitting…" : "Submit ✓"}
               </button>
             </div>
           </>

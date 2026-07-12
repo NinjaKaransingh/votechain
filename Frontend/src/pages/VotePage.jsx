@@ -1,14 +1,11 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { pollAPI, voteAPI } from "../api/services";
+import { useAuth } from "../context/useAuth";
 import "../styles/VotePage.css";
 
-const CANDIDATES = [
+const PALETTE = [
   {
-    id: "priya-nair",
-    name: "Priya Nair",
-    initials: "PN",
-    party: "Independent",
-    bio: "Ward 4 · 12 years local experience",
     avatarBg: "#9FE1CB",
     avatarColor: "#085041",
     partyBg: "#E1F5EE",
@@ -16,11 +13,6 @@ const CANDIDATES = [
     barColor: "#1D9E75",
   },
   {
-    id: "rahul-desai",
-    name: "Rahul Desai",
-    initials: "RD",
-    party: "Progressive",
-    bio: "Ward 4 · Infrastructure & transport",
     avatarBg: "#B5D4F4",
     avatarColor: "#042C53",
     partyBg: "#E6F1FB",
@@ -28,11 +20,6 @@ const CANDIDATES = [
     barColor: "#378ADD",
   },
   {
-    id: "sunita-rao",
-    name: "Sunita Rao",
-    initials: "SR",
-    party: "Green",
-    bio: "Ward 4 · Environment & sustainability",
     avatarBg: "#C0DD97",
     avatarColor: "#173404",
     partyBg: "#EAF3DE",
@@ -40,11 +27,6 @@ const CANDIDATES = [
     barColor: "#639922",
   },
   {
-    id: "vikram-mehta",
-    name: "Vikram Mehta",
-    initials: "VM",
-    party: "Liberal",
-    bio: "Ward 4 · Economy & small business",
     avatarBg: "#F5C4B3",
     avatarColor: "#4A1B0C",
     partyBg: "#FAECE7",
@@ -53,58 +35,126 @@ const CANDIDATES = [
   },
 ];
 
-const POLL = {
-  title: "City Council Election 2026",
-  region: "Karnataka",
-  closes: "Jun 15",
-};
+const initialsOf = (name = "") =>
+  name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase())
+    .join("") || "??";
 
 const VotePage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const pollIdParam = searchParams.get("pollId");
+
+  const [poll, setPoll] = useState(null);
+  const [candidates, setCandidates] = useState([]);
   const [selected, setSelected] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [receipt, setReceipt] = useState(null);
+  const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [voting, setVoting] = useState(false);
 
-  // Simulated vote counts — replace with API data
-  const [votes, setVotes] = useState({
-    "priya-nair": 142,
-    "rahul-desai": 98,
-    "sunita-rao": 75,
-    "vikram-mehta": 53,
-  });
+  useEffect(() => {
+    const loadPoll = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        let activePoll;
+        if (pollIdParam) {
+          const { data } = await pollAPI.getById(pollIdParam);
+          activePoll = data;
+        } else {
+          const { data } = await pollAPI.getAll();
+          activePoll = data[0]; // first active poll — swap for a poll picker later
+        }
 
-  const total = Object.values(votes).reduce((a, b) => a + b, 0);
+        if (!activePoll) {
+          setError("There are no active polls right now. Check back soon.");
+          setLoading(false);
+          return;
+        }
+
+        setPoll(activePoll);
+        const mapped = (activePoll.candidates || []).map((c, i) => ({
+          id: c._id,
+          name: c.userId?.name || "Unknown",
+          party: c.party,
+          bio: `${activePoll.region} · ${c.position}`,
+          ...PALETTE[i % PALETTE.length],
+        }));
+        setCandidates(mapped);
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to load poll.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPoll();
+  }, [pollIdParam]);
 
   const handleVote = async () => {
-    if (!selected) return;
+    if (!selected || !poll) return;
+    setVoting(true);
+    setError("");
+    try {
+      await voteAPI.cast({ candidateId: selected.id, pollId: poll._id });
 
-    const updatedVotes = {
-      ...votes,
-      [selected.id]: votes[selected.id] + 1,
-    };
-    setVotes(updatedVotes);
+      setReceipt({
+        name: selected.name,
+        time:
+          new Date().toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }) +
+          ", " +
+          new Date().toLocaleDateString("en-IN"),
+        id: "#" + Math.random().toString(36).slice(2, 10).toUpperCase(),
+      });
 
-    setReceipt({
-      name: selected.name,
-      time:
-        new Date().toLocaleTimeString("en-IN", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }) +
-        ", " +
-        new Date().toLocaleDateString("en-IN"),
-      id: "#" + Math.random().toString(36).slice(2, 10).toUpperCase(),
-    });
-
-    // TODO: POST /api/votes  { pollId, candidateId }
-    setSubmitted(true);
+      const { data } = await voteAPI.getResults(poll._id);
+      setResults(data);
+      setSubmitted(true);
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "Could not cast your vote. Please try again.",
+      );
+    } finally {
+      setVoting(false);
+    }
   };
 
-  const newTotal = submitted
-    ? Object.values({ ...votes }).reduce((a, b) => a + b, 0)
-    : total;
+  if (loading) {
+    return (
+      <div className="vt-root">
+        <div className="vt-inner">
+          <p style={{ padding: "3rem 0", textAlign: "center" }}>
+            Loading poll…
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-  if (submitted) {
+  if (error && !poll) {
+    return (
+      <div className="vt-root">
+        <div className="vt-inner">
+          <p style={{ padding: "3rem 0", textAlign: "center" }}>{error}</p>
+          <button className="vt-btn-back" onClick={() => navigate("/")}>
+            ← Back to home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (submitted && results) {
     return (
       <div className="vt-root">
         <div className="vt-bg-grid" aria-hidden="true" />
@@ -116,11 +166,10 @@ const VotePage = () => {
               Your vote has been recorded securely. Thank you for participating.
             </p>
 
-            {/* Receipt */}
             <div className="vt-receipt">
               <div className="vt-receipt-row">
                 <span className="vt-receipt-key">Poll</span>
-                <span className="vt-receipt-val">{POLL.title}</span>
+                <span className="vt-receipt-val">{poll.title}</span>
               </div>
               <div className="vt-receipt-row">
                 <span className="vt-receipt-key">Voted for</span>
@@ -136,27 +185,25 @@ const VotePage = () => {
               </div>
             </div>
 
-            {/* Live results */}
             <div className="vt-results">
               <div className="vt-results-title">Live results</div>
-              {CANDIDATES.map((c) => {
-                const count = votes[c.id] + (c.id === selected?.id ? 1 : 0);
-                const pct = Math.round((count / (newTotal + 1)) * 100);
-                return (
-                  <div className="vt-bar-row" key={c.id}>
-                    <div className="vt-bar-label">
-                      <span className="vt-bar-name">{c.name}</span>
-                      <span className="vt-bar-pct">{pct}%</span>
-                    </div>
-                    <div className="vt-bar-track">
-                      <div
-                        className="vt-bar-fill"
-                        style={{ width: `${pct}%`, background: c.barColor }}
-                      />
-                    </div>
+              {results.results.map((r, i) => (
+                <div className="vt-bar-row" key={r.candidateId}>
+                  <div className="vt-bar-label">
+                    <span className="vt-bar-name">{r.name}</span>
+                    <span className="vt-bar-pct">{r.percentage}%</span>
                   </div>
-                );
-              })}
+                  <div className="vt-bar-track">
+                    <div
+                      className="vt-bar-fill"
+                      style={{
+                        width: `${r.percentage}%`,
+                        background: PALETTE[i % PALETTE.length].barColor,
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
 
             <button className="vt-btn-back" onClick={() => navigate("/")}>
@@ -172,25 +219,25 @@ const VotePage = () => {
     <div className="vt-root">
       <div className="vt-bg-grid" aria-hidden="true" />
       <div className="vt-inner">
-        {/* Poll header */}
         <div className="vt-header">
           <div className="vt-eyebrow">
             <span className="vt-dot" />
             Active poll
           </div>
-          <h1 className="vt-title">{POLL.title}</h1>
+          <h1 className="vt-title">{poll.title}</h1>
           <div className="vt-meta">
-            <span className="vt-chip">{CANDIDATES.length} candidates</span>
-            <span className="vt-chip">Closes {POLL.closes}</span>
-            <span className="vt-chip">{POLL.region}</span>
+            <span className="vt-chip">{candidates.length} candidates</span>
+            <span className="vt-chip">
+              Closes {new Date(poll.endDate).toLocaleDateString("en-IN")}
+            </span>
+            <span className="vt-chip">{poll.region}</span>
           </div>
         </div>
 
-        {/* Candidates */}
         <div>
           <div className="vt-section-label">Choose your candidate</div>
           <div className="vt-candidates">
-            {CANDIDATES.map((c) => (
+            {candidates.map((c) => (
               <div
                 key={c.id}
                 className={`vt-cand${selected?.id === c.id ? " selected" : ""}`}
@@ -204,7 +251,7 @@ const VotePage = () => {
                   className="vt-avatar"
                   style={{ background: c.avatarBg, color: c.avatarColor }}
                 >
-                  {c.initials}
+                  {initialsOf(c.name)}
                 </div>
                 <div className="vt-cand-body">
                   <div className="vt-cand-name">{c.name}</div>
@@ -224,7 +271,6 @@ const VotePage = () => {
           </div>
         </div>
 
-        {/* Confirm box */}
         {selected && (
           <div className="vt-confirm-box fade-in">
             <div
@@ -234,7 +280,7 @@ const VotePage = () => {
                 color: selected.avatarColor,
               }}
             >
-              {selected.initials}
+              {initialsOf(selected.name)}
             </div>
             <div>
               <div className="vt-confirm-label">Voting for</div>
@@ -250,17 +296,21 @@ const VotePage = () => {
           </div>
         )}
 
-        {/* Cast vote */}
+        {error && (
+          <p style={{ color: "#B3261E", textAlign: "center" }}>{error}</p>
+        )}
+
         <button
           className="vt-btn-vote"
-          disabled={!selected}
+          disabled={!selected || voting}
           onClick={handleVote}
         >
-          ✓ Cast your vote
+          {voting ? "Casting vote…" : "✓ Cast your vote"}
         </button>
 
         <p className="vt-disclaimer">
-          🔒 Your vote is anonymous and cannot be changed after submission.
+          🔒 Logged in as {user?.email}. Your vote can only be cast once per
+          poll.
         </p>
       </div>
     </div>
