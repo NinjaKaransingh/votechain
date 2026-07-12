@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 import "../styles/HomePage.css";
 
 const stats = [
@@ -21,9 +22,30 @@ const tickerItems = [
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   return (
     <div className="vs-root">
       <div className="vs-bg-grid" aria-hidden="true" />
+
+      {!isAuthenticated && (
+        <button
+          onClick={() => navigate("/login")}
+          style={{
+            position: "absolute",
+            top: 20,
+            right: 20,
+            padding: "8px 18px",
+            borderRadius: 8,
+            border: "1px solid rgba(0,0,0,0.15)",
+            background: "#fff",
+            fontWeight: 600,
+            cursor: "pointer",
+            zIndex: 2,
+          }}
+        >
+          Log in
+        </button>
+      )}
 
       <div className="vs-badge">
         <span className="vs-badge-dot" />

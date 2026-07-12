@@ -1,8 +1,8 @@
-import { Navigate } from "react";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 const ProctedRoutes = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth;
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) return null; // avoid flashing a redirect while localStorage is being read
 

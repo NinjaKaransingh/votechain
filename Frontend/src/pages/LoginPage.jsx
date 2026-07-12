@@ -21,7 +21,7 @@ const LoginPage = () => {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    passowrd: "",
+    password: "",
     state: "",
   });
   const [error, setError] = useState("");
@@ -35,7 +35,7 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //it gives you control over what happens when an event is triggered, instead of letting the browser handle it automatically.
 
     setError("");
     setLoading(true);
@@ -62,7 +62,8 @@ const LoginPage = () => {
       navigate("/vote");
     } catch (err) {
       setError(
-        err.response?.message || "Something went wrong. Please try again.",
+        err.response?.data?.message ||
+          "Something went wrong. Please try again.",
       );
     } finally {
       setLoading(false);

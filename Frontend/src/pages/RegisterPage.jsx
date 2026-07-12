@@ -89,7 +89,6 @@ const RegisterPage = () => {
 
   const handleSubmit = async () => {
     // TODO: wire to POST /api/candidates/RegisterPage
-    console.log("Submitting:", form);
     setSubmitError("");
     setSubmitting(true);
     try {
@@ -110,6 +109,7 @@ const RegisterPage = () => {
         email: data.candidate.email,
         role: "candidate",
       });
+      setStep(4);
     } catch (err) {
       setSubmitError(
         err.response?.data?.message || "Registration failed. Please try again.",
@@ -117,7 +117,6 @@ const RegisterPage = () => {
     } finally {
       setSubmitting(false);
     }
-    setStep(4);
   };
 
   const handleClick = () => {
