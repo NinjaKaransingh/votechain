@@ -7,11 +7,16 @@ const {
   addCandidateToPoll,
 } = require("../controllers/pollController.js");
 
-const { protect } = require("../middlewares/authMiddleware");
+const { protect, authorize } = require("../middlewares/authMiddleware");
 
-router.post("/create", protect, createPoll);
+router.post("/create", protect, authorize("admin"), createPoll);
 router.get("/", getAllPolls);
 router.get("/:id", getPollById);
-router.post("/:id/add-candidate", protect, addCandidateToPoll);
+router.post(
+  "/:id/add-candidate",
+  protect,
+  authorize("admin"),
+  addCandidateToPoll,
+);
 
 module.exports = router;

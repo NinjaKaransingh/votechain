@@ -1,7 +1,5 @@
-const User = require("../models/User");
 const Candidate = require("../models/Candidate");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const createUserAccount = require("../utils/createUserAccount");
 
 // ── REGISTER AS CANDIDATE ──
 const registerCandidate = async (req, res) => {
@@ -9,23 +7,10 @@ const registerCandidate = async (req, res) => {
     const { name, email, password, state, party, position, bio, photo } =
       req.body;
 
-    //1. checking whether the candidate is already present
-    const existingCandidate = await User.findOne({ email });
-
-    if (existingCandidate)
-      return res.status(400).json({
-        message: "Candidate already exists",
-      });
-
-    //2. Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // 3.Create User with role "candidate"
-    const user = await User.create({
+    const { user, token } = createUserAccount({
       name,
       email,
-      password: hashedPassword,
+      password,
       role: "candidate",
       state,
     });
@@ -39,16 +24,6 @@ const registerCandidate = async (req, res) => {
       photo: photo || "",
       voteCount: 0,
     });
-
-    // 5. Generate JWT token
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN },
-    );
 
     //6. Send response
     res.status(201).json({
