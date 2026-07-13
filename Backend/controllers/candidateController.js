@@ -7,7 +7,7 @@ const registerCandidate = async (req, res) => {
     const { name, email, password, state, party, position, bio, photo } =
       req.body;
 
-    const { user, token } = createUserAccount({
+    const { user, token } = await createUserAccount({
       name,
       email,
       password,

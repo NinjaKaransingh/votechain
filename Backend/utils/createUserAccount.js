@@ -18,8 +18,8 @@ const createUserAccount = async ({ name, email, password, role, state }) => {
   }
 
   // 2. Hash the password
-  const salt = bcrypt.genSalt(10);
-  const hashedPassword = bcrypt.hash(password, salt);
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
 
   // 3. Create the user
   const user = await User.create({
